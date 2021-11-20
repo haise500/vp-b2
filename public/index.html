@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <title>モシモシのりちゃん電話b2</title>
+
+
+    <!-- 文字表示の修飾 -->
+    <!-- ＣＳＳ定義、下記はコメントではない -->
+    <style type="text/css">
+
+    /*-- 読み取り専用のエリアの背景を灰色にするスタイル設定（ class= 指定ではなく） */
+    /*  input:read-only, textarea:read-only {
+              background-color: #cccccc;
+              background-color: #ffff99;
+        }  */
+
+    <!--
+
+      .orange { background-color: #ffcc99; }
+      .lime   { background-color: #00ff00; color: #ffffff; font-weight: bold;
+                border-radius: 6px; border: 6px outset #00cc00; }
+      .yellow { background-color: rgba(255,255,0,0.7); font-weight: bold; }
+      .violet { background-color: #6633cc; color: #ffffff; font-family: impact,"Noto Sans JP",sans-serif;
+                font-size: x-large; font-weight: bold; }
+      .white  { background-color: #ffffff; font-size: x-small; position: absolute; left: 100px; }
+
+      /*  文字チャットの入力エリア  */
+      .textbox {
+                 background-color: #d5ffd5;
+                 border: 2px solid red;
+                 border-radius: 6px;
+                 padding: 9px;
+                 font-size: 16px;
+                 font-weight: normal;
+                 height: 10px;
+                 width: 400px;
+                 font-family: sans-serif,serif;
+      }
+
+      /*  発信ボタンの点滅  */
+      .blinking{
+                 -webkit-animation:blink 105s ease-in-out infinite alternate;
+                 -moz-animation:blink 1.0s ease-in-out infinite alternate;
+                 animation:blink 1.0s ease-in-out infinite alternate;
+                 background-color:#ff0000; color:#ffffff; font-weight:bold;
+                 border-radius: 6px; border: 4px outset #b9000e;
+                 cursor: pointer;
+      }
+      @-webkit-keyframes blink {
+          0% {opacity:0;}
+          100% {opacity:1;}
+      }
+      @-moz-keyframes blink {
+          0% {opacity:0;}
+          100% {opacity:1;}
+      }
+      @keyframes blink {
+          0% {opacity:0;}
+          100% {opacity:1;}
+      }
+
+      /*  休止ボタン  */
+      .leave   {
+                 background-color:#00ff00; color:#ffffff; font-weight:bold;
+                 border-radius: 6px; border: 4px outset #00cc00;
+                 cursor: pointer;
+      }
+
+      /*  文字を送る  */
+      .submit  {
+                 background-color:#ffff00; color: #000000; font-weight:bold;
+                 border-radius: 6px; border: 4px outset #ffcc00;
+                 cursor: pointer;
+      }
+
+      /*  textarea の download  */
+      .save    {
+                 background-color:#ffff00; color: #000000; font-weight:bold; margin-left: 20px;
+                 border-radius: 6px; border: 4px outset #ffcc00;
+                 cursor: pointer;
+      }
+
+      /*  テーブル  */
+      .table, .th, .td  {
+                 border-collapse: separate; border: solid 1px #000000;
+                 margin: 0px 60px;
+      }
+
+      /*  通話中  */
+      .connect     {
+                 border-collapse: separate;
+                 background-color:#ff0000; color: #000000; font-weight:normal; margin-left: 0px;
+                 border-radius: 0px; border: 2px outset #ff0000;
+      }
+
+      /*  切断  */
+      .disconnect  {
+                 border-collapse: separate;
+                 background-color:#00ff00; color: #000000; font-weight:normal; margin-left: 0px;
+                 border-radius: 0px; border: 2px outset #00ff00;
+      }
+
+      /*  カメラ映像の位置  */
+      .margin1 { margin: 5px auto; }
+      .margin2 { margin: 5px 100px 5px auto; }
+      .video1  { text-align: left; }
+      .video2  { text-align: center; }
+      .top     { vertical-align: top; }
+
+      /*  peerid の表示用  */
+      .dispid {
+                 margin-top: 10px;
+                 margin-left: 300px;
+                 width: 400px;
+                 background-color: rgba(192,192,192,0.7);
+      }
+
+      /*  ナレーターの表示用　その１（相対位置）  */
+      .narrator1 {
+                 margin-top: 10px;
+                 margin-left: 40px;
+                 background-color: #6633cc;
+                 color: #ffffff;
+                 font-family: impact,"Noto Sans JP",sans-serif;
+                 font-size: medium;
+                 cursor: pointer;
+      }
+
+      /*  ナレーターの表示用　その２（絶対位置）  */
+      .narrator2 {
+                 position: fixed;
+                 top: 20px;
+                 left: 450px;
+
+                 display: inline-block;
+                 text-decoration: none;
+                 background: #6633cc;
+                 color: #FFF;
+                 width: 60px;
+                 height: 60px;
+                 line-height: 60px;
+                 border-radius: 50%;
+                 text-align: center;
+                 font-weight: bold;
+                 overflow: hidden;
+                 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.29);
+                 /*  border-bottom: solid 5px #0033cc;  */
+                 border-bottom: solid 5px #ff0000;
+                 transition: .4s;
+                 cursor: pointer;
+       }
+      .narrator2:active {
+                 -webkit-transform: translateY(2px);
+                 transform: translateY(2px);
+                 box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+                 border-bottom: none;
+       }
+
+    -->
+
+
+      /* 全画面の背景 画像 */
+      /* body {
+          background-image: url("vpimg002.jpg");
+          background-size: cover;
+      } */
+      /*  ↓↓↓　これで表示された！（拡張子も大文字／小文字を区別）　↓↓↓  */
+      body {
+          background: url('/vpimg003.jpg');
+          background-size: cover;
+      }
+
+    </style>
+
+
+    <!--  textarea の download  Script  -->
+    <script>
+      function save() {
+    // テキストエリアより文字列を取得
+        const textarea_message_received = document.getElementById('textarea_message_received').value;
+        if (!textarea_message_received) { return; }
+
+    // 文字列をBlob化
+        const blob = new Blob([textarea_message_received], { type: 'text/plain' });
+
+    // ダウンロード用のaタグ生成
+        const a = document.createElement('a');
+        a.href =  URL.createObjectURL(blob);
+        a.download = 'norichan.txt';
+        a.click();
+      };
+    </script>
+
+
+    <!--  ナレーターの声  script  -->
+    <script type="text/javascript">
+      function narratoron() {
+      document.getElementById("narratorvoice").play();
+    }
+    </script>
+
+
+  <!-- Google Search Console 「所有権の確認」 -->
+  <!-- <meta name="google-site-verification" content="7iPZakvtuBAxH53NuTvB-yHRYgn2m-YcJJ7ubYGa5as" /> -->
+
+  </head>
+
+
+  <body>
+
+    <b>
+    <span class="violet"> 　モシモシ のりちゃん 電話　　</span>
+    </b>
+    <br>
+
+    <span class="white"> ｖｐ－ｂ２ (Ver 2.01) </span>
+    <br>
+
+
+    <!--  ナレーション開始  -->
+    <!--  自動再生はブラウザで禁止される  -->
+    <audio id="narratorvoice" preload="auto">
+      <source  src="/vpvoi001.mp3">
+    </audio>
+
+    <input class="narrator2" type="button" onclick="narratoron()" value="ﾅﾚｰﾀｰ">
+
+
+    <div>
+    <table border="1" align="left"
+      style="border-collapse: separate; border: solid 1px #000000;
+             margin: 0px 60px"
+    >
+      <!-- <table border="1" class="table"　align="left"> -->
+
+      <caption>電話の状態</caption>
+      <tr>
+      <!--  document.getElementById("connect").style.visibility="visible";  表示する    -->
+      <!--  document.getElementById("connect").style.visibility="hidden";   表示しない  -->
+      <td  class="connect"  id="connect-sts">　通話中　</td>
+      <!-- <span  class="connect"  id="connect-sts"   >　通話中　</span> -->
+
+      <!--  document.getElementById("disconnect").style.visibility="visible";  表示する    -->
+      <!--  document.getElementById("disconnect").style.visibility="hidden";   表示しない  -->
+      <td  class="disconnect"  id="disconnect-sts">　切断　</td>
+      <!-- <span  class="disconnect"  id="disconnect-sts">　切断　</span>  -->
+      </tr>
+    </table >
+
+    <br>
+
+
+    <!--  ｐｅｅｒＩＤ（技術情報）の表示  HTML & script  -->
+    <!--  client.js  の情報が引き継げない  -->
+    <!--
+    <div class="dispid" id="peerid">　peerid (Technical　Information)　</div>
+
+    <script>
+      var str = "rtcPeerConnection" ;
+      document.getElementById("peerid").textContent = str ;
+      console.log ( "========== log: " , "rtcPeerConnection" ) ;
+    </script>
+    -->
+
+    <br clear="all">
+
+
+    <!--  初期状態のステータス表示  -->
+    <script>
+      document.getElementById("connect-sts").style.visibility="hidden";
+      document.getElementById("disconnect-sts").style.visibility="visible";
+    </script>
+
+
+    <!-- カメラのＯＮ／ＯＦＦのチェックボックス -->
+    <!-- <input type="checkbox" id="checkbox_camera" onclick="onclickCheckbox_CameraMicrophone()">Camera -->
+    <input type="checkbox" id="checkbox_camera" style="cursor: pointer"
+           onclick="onclickCheckbox_CameraMicrophone()">カメラ
+    <small> ON/OFF　</small>
+    <!-- <kbd> ON/OFF　</kbd> -->
+
+    <!-- マイクのＯＮ／ＯＦＦのチェックボックス -->
+    <!-- <input type="checkbox" id="checkbox_microphone" onclick="onclickCheckbox_CameraMicrophone()">Microphone -->
+    <input type="checkbox" id="checkbox_microphone" style="cursor: pointer"
+           onclick="onclickCheckbox_CameraMicrophone()">マイク
+    <small> ON/OFF</small>
+    <!-- <kbd> ON/OFF</kbd> -->
+
+
+    <span style="margin: 0px 30px 0px 30px;">　　　　　</span>
+    <!-- 「自動シグナリング」のボタン -->
+    <button class="blinking"
+            onclick="onclickButton_SendOfferSDP()">　　呼　出　　</button>
+
+    <span style="margin: 0px 10px 0px 10px;">　　</span>
+     <!-- 「会話を離れる」のボタン -->
+    <button class="leave"
+            onclick="onclickButton_LeaveChat()">一時休止</button>
+    <br />
+
+
+    <!-- 映像表示用の要素 -->
+    <video class="top" id="video_local"
+           width="320" height="240" style="border: 1px solid black;" autoplay>
+    </video>
+
+    <!-- リモート映像表示用の要素とリモート音声再生用の要素 -->
+    <video class="top" id="video_remote"
+           width="420" height="340" style="border: 4px double black;" autoplay>
+    </video>
+
+    <audio id="audio_remote" autoplay>
+    </audio>
+    <br />
+
+
+
+
+    <!-- 交換する情報を表示するためのテキストエリア -->
+    <!-- 交換する情報を貼り付けるためのテキストエリア -->
+    <!-- 「マニュアルシグナリング」用のテキストテーブルエリアをコメントアウト
+    <table border="1">
+      <tbody>
+          <tr>
+              <td></td>
+              <td>Offer side</td>
+              <td>Answer side</td>
+          </tr>
+          <tr>
+              <td>OfferSDP</td>
+              <td>
+                  <button onclick="onclickButton_CreateOfferSDP()">Create OfferSDP.</button>
+                  <br>
+                  <textarea id="textarea_offerside_offsersdp" rows="10" cols="40" readonly="readonly"></textarea>
+              </td>
+              <td>
+                  <br>
+                  <textarea id="textarea_answerside_offsersdp" rows="10" cols="40"></textarea>
+              </td>
+          </tr>
+          <tr>
+              <td>AnswerSDP</td>
+              <td>
+                  <br>
+                  <textarea id="textarea_offerside_answersdp" rows="10" cols="40"></textarea><br>
+                  <button onclick="onclickButton_SetAnswerSDPthenChatStarts()">Set AnswerSDP. Then the chat starts.</button>
+              </td>
+              <td>
+                  <button onclick="onclickButton_SetOfferSDPandCreateAnswerSDP()">Set OfferSDP and Create AnswerSDP.</button>
+                  <br>
+                  <textarea id="textarea_answerside_answersdp" rows="10" cols="40" readonly="readonly"></textarea><br>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+    ----- ここまで -->
+
+
+
+
+    <!-- エンターキーによるボタン押下を行うために、<button>ではな<form>と<input type="submit">を使用。
+    ボタン押下(=submit)時にページリロードが行われないように、onsubmitの設定の最後に"return false;"を追加。-->
+    <br />
+
+    <form action="" onsubmit="onsubmitButton_SendMessage(); return false;">
+    <!--  <form novalidate onsubmit="onsubmitButton_SendMessage(); return false;">  -->
+
+        <input class="textbox" type="text" placeholder="Enter でも 文字が送れます"
+                               id="text_message_for_send" />
+
+        <input class="submit"  type="submit" value="文字を送る" />
+
+        <!--  textarea の download (Script)  -->
+        <button class="save"   onclick="save()">文字エリアのダウンロード</button>
+
+    </form>
+
+
+    <!--  textarea  を、タイトル付きボックスで囲む  -->
+    <!--  ボックスの外周は、 textarea  に影響される  -->
+    <fieldset style="font-weight:bold;">
+    <legend align="left" style="font-size:16px; color:#ffffff;">　文字チャット　</legend>
+
+    <!--  textarea  の作成と修飾  -->
+    <textarea id="textarea_message_received" rows="10" cols="60" readonly="readonly"
+              style="border:thick ridge #800000; background-color:#006a00; margin-top: 5px;
+                     font-size: 16px; color:#ffffff; font-family:富士ポップ">
+    </textarea>
+
+
+    <!-- 「自動シグナリング」のボタン
+    <br />
+    <button onclick="onclickButton_SendOfferSDP()">Send OfferSDP.</button>
+      -- 「会話を離れる」のボタン --
+    <br />
+    <button onclick="onclickButton_LeaveChat()">Leave Chat.</button>
+    -->
+
+
+    <!--  //////////    Script    //////////  -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="./client.js"></script>
+
+
+  </body>
+
+
+</html>
